@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Status</title>
+    <style>
+    
+    *{
+        margin:0;
+        padding:0;
+    }
+
+    body {
+        text-align: center;
+        width: 100vw;
+        font-size: 20px;
+    }
+    header{
+        background-color: black;
+        color:white;
+        padding:10px 0px;
+    }
+    .stats {
+        margin-top: 25px;
+    }
+
+    .check {
+        margin-top:25px;
+    }
+
+    .check > input {
+        padding:10px 10px;
+    }
+
+    button {
+        padding:10px 10px;
+    }
+
+    section.team-selection {
+        margin-top:50px;
+    }
+
+    .team-selection-heading {
+        color:green;
+        margin-bottom: 25px;
+    }
+
+    .form-group{
+        margin : 15px 0px
+    }
+
+    .form-group > label {
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .form-group > input {
+        outline: none;
+        border: none;
+        padding:5px 6px;
+        border-bottom: 3px solid black;
+        text-align: center;
+    }
+
+    #register-team {
+        background-color: green;
+        color:white;
+        padding:10px 10px;
+        
+    }
+
+    .error-msg {
+        font-size: 12px;
+        background-color: rgba(235, 109, 109, 0.486);
+        color:black;
+        padding: 10px 2px;
+     
+        width: 70%;
+        display: none;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <h3>Bootcamp Portal v 0.10</h3>
+    </header>
+    <div class="conatiner">
+        
+        <br>
+        <img src="LOGO.png" width="150px" alt="">
+
+
+        <div class="check">
+            <h4>CHECK STATUS</h4>
+            <br>
+            <input type="text" id="reg_no" placeholder="REGISTRATION NUMBER">
+            
+            <button id="btn">Check Status</button>
+            <br>
+
+            <span id="msg"></span>
+        </div>
+
+        
+        <section class="team-selection">
+            <h4 class="team-selection-heading"> Register your team</h4>
+
+            <div class="form-group">
+                <label for="team_name">Team Name</label>
+                <input type="text" id="team_name" placeholder="Name your Team">
+            </div>
+            <div class="form-group">
+                <label for="mentor">Mentor</label>
+                <select name="mentor" id="mentor">
+                    <option value="jan">Jan Mohd. {IoT, Embeded C }</option>
+                    <option value="yaseen">Yaseen Mir {IoT,Python,Embeded C} </option>
+                    <option value="manan">Abdul Manan{Python,IoT,Design}</option>
+                    <option value="hyder">Hyder Ali {Web,IoT,Linux}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="member1">Team Lead</label>
+                <input type="text" id="member1" onchange="validateMember(this.value,this)" placeholder="IUST011XXXXX">
+            </div>
+
+            <div class="form-group">
+                <label for="member2">Member</label>
+                <input type="text" id="member2" onchange="validateMember(this.value,this)" placeholder="IUST011XXXXX">
+            </div>
+
+            <div class="form-group">
+                <label for="member3">Member</label>
+                <input type="text" id="member3" onchange="validateMember(this.value,this)" placeholder="IUST011XXXXX">
+            </div>
+
+            <div class="form-group">
+                <label for="member4">Member</label>
+                <input type="text" id="member4" onchange="validateMember(this.value,this)" placeholder="IUST011XXXXX">
+            </div>
+
+           
+
+            <button id="register-team"> Register Team </button>
+        </section>
+        
+    </div>
+
+    <script>
+
+    let verified = [false,false,false,false]
+
+    let button = document.querySelector("#btn")
+    button.addEventListener("click",(e)=>{
+        console.log("CLICK")
+        const options = {
+        method: 'POST',
+        
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    let msg_holder = document.querySelector("#msg")
+    let reg_no = document.querySelector("#reg_no").value
+
+    console.log(reg_no)
+    fetch( window.location.origin + "/status?"+`reg_no=${reg_no}`,options)
+        .then((data)=>data.text()).then((msg) => msg_holder.innerHTML = msg)
+
+    })
+
+    function validateMember(reg,element){
+        console.log(reg)
+        let url = window.location.origin + "/checkTeamMember"
+
+        const options = {
+        method: 'POST',
+        body: JSON.stringify({member_reg:reg.toUpperCase()}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    fetch(url,options).then((data)=>data.text()).then((value) => {
+        if(value !== "success"){
+            element.style.color = "red"
+            createErrorMsg(element,reg+" is already in other team or not registered.")
+        }
+
+        else {
+            try {
+                let p = document.querySelector(".error-msg")
+                element.parentElement.removeChild(p)
+            } catch (error) {
+                
+            }
+            element.style.color = "green"
+            let index = element.id[6] - 1
+            verified [index] = true
+
+        }
+    })
+  }
+
+  function createErrorMsg(element,msg){
+      let p = document.createElement("p")
+      p.style.display = "block"
+      p.className = "error-msg"
+      p.textContent = msg
+      element.parentElement.appendChild(p)
+  }
+
+
+  let registerTeamBtn = document.querySelector("#register-team")
+  registerTeamBtn.addEventListener("click",(e)=>{
+      registerTeam()
+  })
+
+  function registerTeam(){
+      let teamName = document.querySelector("#team_name").value
+      let mentor = document.querySelector("#mentor").value
+        let member1 = document.querySelector("#member1").value.toUpperCase()
+        let member2 = document.querySelector("#member2").value.toUpperCase()
+        let member3 = document.querySelector("#member3").value.toUpperCase()
+        let member4 = document.querySelector("#member4").value.toUpperCase()
+
+        let members = []
+        members = [member1,member2,member3,member4]
+        if(
+            teamName == "" ||
+            verified[0] != true ||
+            verified[1] != true ||
+            verified[2] != true ||
+            verified[3] != true 
+        ){
+            return
+        }
+
+        let team = {
+            teamName : teamName,
+            mentor : mentor,
+            members :members
+        }
+
+        let url = window.location.origin + "/registerTeam"
+        const options = {
+        method: 'POST',
+        body: JSON.stringify(team),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+        fetch(url,options).then((data)=>data.text()).then((value)=>{
+            console.log(value)
+            registerTeamBtn.textContent = "Registered!"
+            registerTeamBtn.disabled = true
+        })
+  }
+    </script>
+</body>
+</html>

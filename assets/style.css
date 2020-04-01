@@ -1,0 +1,102 @@
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box
+}
+main {
+    width:70vw;
+    float: right;
+    text-align: center;
+}
+.side-nav {
+    width:24vw;
+    float:left;
+    text-align: center;
+    color:rgb(87, 87, 87);
+    font:14px;
+    line-height: 25px;
+}
+
+.container {
+    padding:25px;
+    
+}
+
+nav {
+    padding: 30px 10px;
+    margin: auto auto;
+    text-align: center;
+    font-family:'Courier New', Courier, monospace;
+    background: black;
+    color:white
+}
+
+div.form-control:not(last-child){
+    margin-bottom: 25px;
+}
+
+.logo {
+    float:left;
+}
+
+.submitBtn {
+
+    background:green;
+    color:white;
+    padding:15px 20px;
+}
+
+form {
+    margin-top:25px;
+}
+
+input[type="text"],input[type="number"],input[type="email"] {
+    outline: none;
+    border:none;
+    border-bottom: 2px solid black;
+    text-align: center;
+    padding:7px 7px;
+}
+
+.mob-only {
+    display: none;
+}
+@media screen and (max-width:520px){
+    body {
+        width:100vw;
+    }
+   .side-nav{
+       width:100vw;
+       padding:0 0;
+       margin:0 0;
+   }
+
+  .container {
+      width:100vw;
+      padding:0 0;
+  }
+
+  .mob-only {
+      display: block;
+  }
+  main {
+      width:100vw;
+      float:none;
+     
+  }
+
+  section.side-nav{
+      margin-bottom: 50px;
+  }
+
+  .disc-list{
+      text-align: left;
+      list-style-type: disc;
+      list-style: circle;
+      padding-left: 10px;
+  }
+
+  ul > li {
+      list-style: circle;
+  }
+}
